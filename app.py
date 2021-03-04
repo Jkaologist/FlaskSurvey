@@ -10,14 +10,20 @@ debug = DebugToolbarExtension(app)
 
 responses = []
 
-curr_question = 0
-
 @app.route("/")
 def index():
-
-    return render_template('survey_start.html', survey = survey)
+    return render_template('survey_start.html', survey=survey)
 
 @app.route("/begin")
 def question_render():
+    return render_template('question.html', question=survey.questions[0])
 
-    return render_template('question.html', question = survey.questions[curr_question])
+@app.route("/answer", methods=["GET", "POST"])
+def responses():
+    responses.append(request.args)
+# This is where we are at
+    return render_template("question.html")
+
+@app.route("/questions/answer")
+def next_question():
+    return render_template('question.html', question=survey.questions[len(responses)])
