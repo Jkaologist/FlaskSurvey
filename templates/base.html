@@ -8,8 +8,12 @@
 </head>
 <body>
 
-{% block content %}
-{% endblock %}
-
+  {% block content %}
+  {% endblock %}
+  {% for msg in get_flashed_messages() %}
+  <p>{{ msg }}</p>
+  {% endfor %}
+  <!--For Debugging--> 
+  
 </body>
 </html>

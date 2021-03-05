@@ -14,16 +14,20 @@ responses = []
 def index():
     return render_template('survey_start.html', survey=survey)
 
-@app.route("/begin")
+@app.route("/begin", methods=["GET", "POST"])
 def question_render():
-    return render_template('question.html', question=survey.questions[0])
+    return redirect('/questions/0')
+
+@app.route("/questions/<int:num>")
+def question_template(num):
+    global responses
+    flash(responses)
+    if len(responses) == len(survey.questions):
+        responses = [] #take this out later
+        return render_template('completion.html')
+    return render_template('question.html', question=survey.questions[len(responses)])
 
 @app.route("/answer", methods=["GET", "POST"])
-def responses():
-    responses.append(request.args)
-# This is where we are at
-    return render_template("question.html")
-
-@app.route("/questions/answer")
-def next_question():
-    return render_template('question.html', question=survey.questions[len(responses)])
+def question_responses():
+    responses.append(request.form['answer'])
+    return redirect(f'questions/{len(responses)}')
